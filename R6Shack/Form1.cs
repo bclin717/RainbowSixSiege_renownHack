@@ -25,6 +25,7 @@ namespace R6Shack {
         private static Form1 form ;
 
         public Form1() {
+            Closing += new CancelEventHandler(Form1_Closing);
             Form1.CheckForIllegalCrossThreadCalls = false;
             InitializeComponent();
             form = this;
@@ -59,7 +60,6 @@ namespace R6Shack {
                 tmpAdd = tmpAdd = Helper.ReadMemoryValue(tmpAdd, NameOfGame);
                 tmpAdd = tmpAdd + offset;
             }
-            //nowScores = Helper.ReadMemoryValue(tmpAdd, "RainbowSixGame");
         }
 
         public static ProcessModule FindModule(string name) {
@@ -93,6 +93,20 @@ namespace R6Shack {
                 Helper.WriteMemoryValue(tmpAdd - 28, "RainbowSixGame", 20000);
                 Helper.WriteMemoryValue(tmpAdd, "RainbowSixGame", 20000);
                 Thread.Sleep(500);
+            }
+        }
+
+        private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            DialogResult dr = MessageBox.Show(this, "確定退出？", "刷好刷滿", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes) {
+                try {
+                    t1.Abort();
+                    System.Environment.Exit(System.Environment.ExitCode);
+                } catch(Exception ex) {
+                    System.Environment.Exit(System.Environment.ExitCode);
+                }
+            } else {
+                e.Cancel = true;
             }
         }
     }
