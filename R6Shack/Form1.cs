@@ -59,7 +59,7 @@ namespace R6Shack {
                 tmpAdd = tmpAdd = Helper.ReadMemoryValue(tmpAdd, NameOfGame);
                 tmpAdd = tmpAdd + offset;
             }
-            nowScores = Helper.ReadMemoryValue(tmpAdd, "RainbowSixGame");
+            //nowScores = Helper.ReadMemoryValue(tmpAdd, "RainbowSixGame");
         }
 
         public static ProcessModule FindModule(string name) {
@@ -81,27 +81,18 @@ namespace R6Shack {
 
         private void checkBox_lockScroe_CheckedChanged(object sender, EventArgs e) {
             if(checkBox_lockScroe.Checked) {
-                Helper.WriteMemoryValue(tmpAdd, "RainbowSixGame", 20000);
                 t1 = new Thread(editScore);
                 t1.Start();
             } else if(!checkBox_lockScroe.Checked) {
                 t1.Abort();
-                form.textBox1.Text = "不知道";
             }
         }
 
         private void editScore() {
             while (true) {
+                Helper.WriteMemoryValue(tmpAdd - 28, "RainbowSixGame", 20000);
                 Helper.WriteMemoryValue(tmpAdd, "RainbowSixGame", 20000);
-                nowScores = Helper.ReadMemoryValue(tmpAdd, "RainbowSixGame");
-                if (nowScores == 20000) {
-                    form.textBox1.Text = nowScores.ToString();
-                } else if (nowScores < 20000) {
-                    form.textBox1.Text = "0";
-                } else {
-                    form.textBox1.Text = "不知道";
-                }
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
         }
     }

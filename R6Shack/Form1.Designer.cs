@@ -24,8 +24,6 @@
         /// </summary>
         private void InitializeComponent() {
             this.checkBox_lockScroe = new System.Windows.Forms.CheckBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label_curScore = new System.Windows.Forms.Label();
             this.label_BEService = new System.Windows.Forms.Label();
             this.label_ifGameRunning = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -34,34 +32,13 @@
             // 
             this.checkBox_lockScroe.AutoSize = true;
             this.checkBox_lockScroe.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.checkBox_lockScroe.Location = new System.Drawing.Point(85, 12);
+            this.checkBox_lockScroe.Location = new System.Drawing.Point(85, 91);
             this.checkBox_lockScroe.Name = "checkBox_lockScroe";
             this.checkBox_lockScroe.Size = new System.Drawing.Size(105, 28);
             this.checkBox_lockScroe.TabIndex = 0;
             this.checkBox_lockScroe.Text = "鎖定分數";
             this.checkBox_lockScroe.UseVisualStyleBackColor = true;
             this.checkBox_lockScroe.CheckedChanged += new System.EventHandler(this.checkBox_lockScroe_CheckedChanged);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.textBox1.Location = new System.Drawing.Point(128, 58);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(100, 29);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "不知道";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label_curScore
-            // 
-            this.label_curScore.AutoSize = true;
-            this.label_curScore.Font = new System.Drawing.Font("微軟正黑體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_curScore.Location = new System.Drawing.Point(42, 60);
-            this.label_curScore.Name = "label_curScore";
-            this.label_curScore.Size = new System.Drawing.Size(86, 24);
-            this.label_curScore.TabIndex = 2;
-            this.label_curScore.Text = "目前分數";
             // 
             // label_BEService
             // 
@@ -90,8 +67,6 @@
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.label_ifGameRunning);
             this.Controls.Add(this.label_BEService);
-            this.Controls.Add(this.label_curScore);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.checkBox_lockScroe);
             this.Name = "Form1";
             this.Text = "Rainbow 6 Siege 分數外掛";
@@ -103,8 +78,6 @@
         #endregion
 
         protected System.Windows.Forms.CheckBox checkBox_lockScroe;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label_curScore;
         private System.Windows.Forms.Label label_BEService;
         private System.Windows.Forms.Label label_ifGameRunning;
     }

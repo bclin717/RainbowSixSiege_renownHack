@@ -62,7 +62,7 @@ namespace R6Shack {
 
         public static void WriteMemoryValue(long baseAddress, string processName, int value) {
             IntPtr hProcess = OpenProcess(0x1F0FFF, false, GetPidByProcessName(processName));
-            WriteProcessMemory(hProcess, (IntPtr)baseAddress, new int[] { value }, 8, IntPtr.Zero);
+            WriteProcessMemory(hProcess, (IntPtr)baseAddress, new int[] { value }, 4, IntPtr.Zero);
             CloseHandle(hProcess);
         }
 
