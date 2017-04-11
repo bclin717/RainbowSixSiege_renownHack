@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading;
+using System.Runtime.ExceptionServices;
 
 namespace R6Shack {
     public partial class Form1 : Form {
@@ -18,11 +13,13 @@ namespace R6Shack {
         static private long[] offsets = { 0x170, 0x280, 0x0, 0xd8, 0xb8 };
 
         private long tmpAdd;
-        private long nowScores;
-
-        Thread t1;
+        private bool addIsDoneflag = false;
 
         private static Form1 form ;
+
+        private Thread t1;
+        private Thread calAdd;
+
 
         public Form1() {
             Closing += new CancelEventHandler(Form1_Closing);
@@ -31,8 +28,8 @@ namespace R6Shack {
             form = this;
             stopBEService();
             ProcessModule module = FindModule(NameOfGame + ".exe");
-            getTheAddScore();
-            t1 = new Thread(editScore); 
+            calAdd = new Thread(getTheAddScore);
+            calAdd.Start();
         }
 
         public static void stopBEService() {
@@ -52,13 +49,25 @@ namespace R6Shack {
             }
         }
 
+        [HandleProcessCorruptedStateExceptions]
         private void getTheAddScore() {
             ProcessModule module = FindModule(NameOfGame + ".exe");
             long baseAddressOfGame = module.BaseAddress.ToInt64();
-            tmpAdd = baseAddressOfGame + baseAddressOfScoresInGame;
-            foreach (long offset in offsets) {
-                tmpAdd = tmpAdd = Helper.ReadMemoryValue(tmpAdd, NameOfGame);
-                tmpAdd = tmpAdd + offset;
+            while (true) {
+                try {
+                    tmpAdd = baseAddressOfGame + baseAddressOfScoresInGame;
+                    foreach (long offset in offsets) {
+                        tmpAdd = tmpAdd = Helper.ReadMemoryValue(tmpAdd, NameOfGame);
+                        tmpAdd = tmpAdd + offset;
+                    }
+                    if (Helper.ReadMemoryValue(tmpAdd, NameOfGame) == 0) {
+                        addIsDoneflag = true;
+                        break;
+                    }
+                } catch (AccessViolationException) {
+                    Thread.Sleep(500);
+                    continue;
+                }     
             }
         }
 
@@ -90,9 +99,11 @@ namespace R6Shack {
 
         private void editScore() {
             while (true) {
-                Helper.WriteMemoryValue(tmpAdd - 28, "RainbowSixGame", 20000);
-                Helper.WriteMemoryValue(tmpAdd, "RainbowSixGame", 20000);
-                Thread.Sleep(500);
+                if(addIsDoneflag == true) {
+                    Helper.WriteMemoryValue(tmpAdd - 28, "RainbowSixGame", 20000);
+                    Helper.WriteMemoryValue(tmpAdd, "RainbowSixGame", 20000);
+                    Thread.Sleep(500);
+                }
             }
         }
 

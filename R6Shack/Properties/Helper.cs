@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace R6Shack {
@@ -47,24 +49,29 @@ namespace R6Shack {
             return 0;
         }
 
+        [HandleProcessCorruptedStateExceptions]
         public static long ReadMemoryValue(long baseAddress, string processName) {
-            try {
-                byte[] buffer = new byte[8];
-                IntPtr byteAddress = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0);
-                IntPtr hProcess = OpenProcess(0x1F0FFF, false, GetPidByProcessName(processName));
-                ReadProcessMemory(hProcess, (IntPtr)baseAddress, byteAddress, 8, IntPtr.Zero);
-                CloseHandle(hProcess);
-                return Marshal.ReadInt64(byteAddress);
-            } catch {
-                return 0;
-            }
+            byte[] buffer = new byte[8];
+            IntPtr byteAddress = Marshal.UnsafeAddrOfPinnedArrayElement(buffer, 0);
+            IntPtr hProcess = OpenProcess(0x1F0FFF, false, GetPidByProcessName(processName));
+            ReadProcessMemory(hProcess, (IntPtr)baseAddress, byteAddress, 8, IntPtr.Zero);
+            CloseHandle(hProcess);
+            return Marshal.ReadInt64(byteAddress); 
         }
 
+        [HandleProcessCorruptedStateExceptions]
         public static void WriteMemoryValue(long baseAddress, string processName, int value) {
             IntPtr hProcess = OpenProcess(0x1F0FFF, false, GetPidByProcessName(processName));
-            WriteProcessMemory(hProcess, (IntPtr)baseAddress, new int[] { value }, 4, IntPtr.Zero);
-            CloseHandle(hProcess);
+            while (true) {
+                try {
+                    WriteProcessMemory(hProcess, (IntPtr)baseAddress, new int[] { value }, 4, IntPtr.Zero);
+                    CloseHandle(hProcess);
+                    return;
+                } catch (AccessViolationException) {
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }   
         }
-
     }
 }

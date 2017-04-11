@@ -72,7 +72,6 @@
             this.Text = "Rainbow 6 Siege 分數外掛";
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
