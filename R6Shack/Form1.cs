@@ -20,7 +20,6 @@ namespace R6Shack {
         private Thread t1;
         private Thread calAdd;
 
-
         public Form1() {
             Closing += new CancelEventHandler(Form1_Closing);
             Form1.CheckForIllegalCrossThreadCalls = false;
